@@ -1,0 +1,43 @@
+{
+  "variables": {
+    "yc_folder_id": "b1gnrpu8l6fn97t58u7s",
+    "yc_subnet_id": "e2l09kbrkc25bibt8l6q",
+    "yc_zone": "ru-central1-b",
+    "sa_key_file": "C:/Users/PC/Desktop/projects/seti/infra/packer/sa-key.json"
+  },
+  "builders": [
+    {
+      "type": "yandex",
+
+      "folder_id": "{{user `yc_folder_id`}}",
+      "zone": "{{user `yc_zone`}}",
+      "subnet_id": "{{user `yc_subnet_id`}}",
+
+      "service_account_key_file": "{{user `sa_key_file`}}",
+
+      "source_image_family": "ubuntu-2004-lts",
+      "platform_id": "standard-v3",
+
+      "ssh_username": "ubuntu",
+      "use_ipv4_nat": true,
+
+      "image_family": "reddit-base",
+      "image_name": "reddit-base-{{timestamp}}",
+
+      "disk_type": "network-hdd",
+      "disk_size_gb": 15
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/install_ruby.sh",
+      "execute_command": "sudo {{.Path}}"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/install_mongodb.sh",
+      "execute_command": "sudo {{.Path}}"
+    }
+  ]
+}
